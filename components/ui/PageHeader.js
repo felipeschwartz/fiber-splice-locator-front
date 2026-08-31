@@ -2,6 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors, fontSize, fontWeight, letterSpacing, spacing } from '../../theme';
 import HomeButton from './HomeButton';
+import HamburgerMenu from './HamburgerMenu';
 
 // Cabeçalho leve (fundo claro) usado em telas de formulário/detalhe que
 // não precisam do bloco navy — mas ainda seguem o mesmo padrão de
@@ -10,13 +11,15 @@ export default function PageHeader({ eyebrow, title, onBack, right }) {
   return (
     <View style={styles.root}>
       <View style={styles.topRow}>
-        {onBack ? (
-          <Pressable onPress={onBack} hitSlop={8}>
-            <Text style={styles.back}>‹ Voltar</Text>
-          </Pressable>
-        ) : (
-          <View />
-        )}
+        <View style={styles.topRowLeft}>
+          <HamburgerMenu tone="light" />
+          {onBack ? (
+            <Pressable onPress={onBack} hitSlop={8}>
+              <Text style={styles.back}>‹ Voltar</Text>
+            </Pressable>
+          ) : null}
+        </View>
+
         <HomeButton tone="light" />
       </View>
 
@@ -39,6 +42,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     minHeight: 20,
     marginBottom: spacing.md,
+  },
+  topRowLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
   },
   back: {
     color: colors.primary,

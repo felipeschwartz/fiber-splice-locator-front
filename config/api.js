@@ -15,6 +15,8 @@ export const API_PATHS = {
   serviceOrderAttendance: (id) => `/api/service_orders/v1/${encodeURIComponent(id)}/attendance`,
 
   serviceOrderPhotos: (id) => `/api/service_order_photos/v1/service-order/${encodeURIComponent(id)}`,
+  serviceOrderStatusDescriptions: (id) =>
+    `/api/service_orders_status_descriptions/v1/service-order/${encodeURIComponent(id)}`,
 
   users: '/api/user/v1',
   userSearch: (query) => `/api/user/v1/search?q=${encodeURIComponent(query)}`,

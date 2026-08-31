@@ -13,6 +13,7 @@ import ServiceOrderCreateScreen from './screens/ServiceOrderCreateScreen';
 import ServiceOrderAttendanceScreen from './screens/ServiceOrderAttendanceScreen';
 import CeoListScreen from './screens/CeoListScreen';
 import CeoDetailsScreen from './screens/CeoDetailsScreen';
+import CeoCreateScreen from './screens/CeoCreateScreen';
 import CeoFormScreen from './screens/CeoFormScreen';
 import UsersScreen from './screens/UsersScreen';
 import UserFormScreen from './screens/UserFormScreen';
@@ -34,6 +35,7 @@ function AuthenticatedNavigator() {
       <Stack.Screen name="ServiceOrderAttendance" component={ServiceOrderAttendanceScreen} />
       <Stack.Screen name="CeoList" component={CeoListScreen} />
       <Stack.Screen name="CeoDetails" component={CeoDetailsScreen} />
+      <Stack.Screen name="CeoCreate" component={CeoCreateScreen} />
       <Stack.Screen name="CeoForm" component={CeoFormScreen} />
       <Stack.Screen name="Users" component={UsersScreen} />
       <Stack.Screen name="UserForm" component={UserFormScreen} />

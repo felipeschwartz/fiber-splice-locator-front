@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { getApiErrorMessage } from '../services/api';
 import { getCeo } from '../services/ceoService';
 import { displayValue, firstValue } from '../utils/format';
-import { Button, ErrorBanner, InfoRow, LoadingView, PageHeader, Screen, SectionCard } from '../components/ui';
-import { colors, fontSize, fontWeight, radius, spacing } from '../theme';
+import { Button, ErrorBanner, GeoRow, InfoRow, LoadingView, PageHeader, Screen, SectionCard } from '../components/ui';
+import { spacing } from '../theme';
 
 const geoOf = (source) => firstValue(source, 'geoLocation', 'geolocation', 'coordinates');
 
@@ -36,12 +36,6 @@ export default function CeoDetailsScreen({ route, navigation }) {
 
   const address = ceo?.address || {};
   const coordinates = geoOf(address) || geoOf(ceo);
-
-  async function openMap() {
-    if (!coordinates) return;
-    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(coordinates)}`;
-    if (await Linking.canOpenURL(url)) await Linking.openURL(url);
-  }
 
   if (loading) {
     return (
@@ -84,19 +78,8 @@ export default function CeoDetailsScreen({ route, navigation }) {
         <InfoRow label="Número" value={address.streetNumber} />
         <InfoRow label="Bairro" value={address.neighborhood} />
         <InfoRow label="Cidade" value={address.city} />
-        <InfoRow label="Ponto de referência" value={address.referencePoint} bordered={false} />
-
-        <View style={styles.geoRow}>
-          <View style={styles.geoText}>
-            <Text style={styles.geoLabel}>GEOLOCALIZAÇÃO</Text>
-            <Text style={styles.geoValue}>{displayValue(coordinates)}</Text>
-          </View>
-          {coordinates ? (
-            <Pressable style={styles.mapButton} onPress={openMap}>
-              <Text style={styles.mapButtonText}>📍 Mapa</Text>
-            </Pressable>
-          ) : null}
-        </View>
+        <InfoRow label="Ponto de referência" value={address.referencePoint} />
+        <GeoRow coordinates={coordinates} bordered={false} />
       </SectionCard>
 
       <ErrorBanner message={error} />
@@ -108,21 +91,4 @@ const styles = StyleSheet.create({
   centerState: { flex: 1, justifyContent: 'center', padding: spacing.xxl },
   centerError: { textAlign: 'center' },
   retryButton: { marginTop: spacing.md },
-  geoRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingTop: spacing.md },
-  geoText: { flex: 1 },
-  geoLabel: {
-    color: colors.textMuted,
-    fontSize: fontSize.xs,
-    fontWeight: fontWeight.extrabold,
-    textTransform: 'uppercase',
-  },
-  geoValue: { color: colors.textBody, fontSize: fontSize.md, marginTop: spacing.xs },
-  mapButton: {
-    marginLeft: spacing.md,
-    backgroundColor: colors.primarySoft,
-    borderRadius: radius.md,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.md - 2,
-  },
-  mapButtonText: { color: colors.primaryDark, fontWeight: fontWeight.extrabold },
 });

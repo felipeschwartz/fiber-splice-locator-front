@@ -1,13 +1,16 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, Pressable, RefreshControl, StyleSheet, Text, TextInput, View } from 'react-native';
 import { getApiErrorMessage } from '../services/api';
 import { listCeos } from '../services/ceoService';
-import { Card, EmptyState, ErrorBanner, HeroHeader, LoadingView, Screen } from '../components/ui';
+import { Button, Card, EmptyState, ErrorBanner, HeroHeader, LoadingView, Screen } from '../components/ui';
 import { colors, fontSize, fontWeight, radius, spacing } from '../theme';
+
+const ATTENTION_STATUSES = ['DAMAGED', 'UNDER_MAINTENANCE'];
 
 export default function CeoListScreen({ navigation }) {
   const [query, setQuery] = useState('');
   const [ceos, setCeos] = useState([]);
+  const [isDefaultView, setIsDefaultView] = useState(true);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState('');
@@ -15,10 +18,12 @@ export default function CeoListScreen({ navigation }) {
   const load = useCallback(async (refresh = false) => {
     refresh ? setRefreshing(true) : setLoading(true);
     setError('');
+    const trimmedQuery = query.trim();
 
     try {
-      const result = await listCeos(query);
+      const result = await listCeos(trimmedQuery);
       setCeos(Array.isArray(result) ? result : []);
+      setIsDefaultView(!trimmedQuery);
     } catch (err) {
       setError(getApiErrorMessage(err, 'Não foi possível carregar as CEOs.'));
     } finally {
@@ -34,6 +39,13 @@ export default function CeoListScreen({ navigation }) {
     // que sempre chama a versão mais atual de `load` (com o `query` em dia).
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Sem busca ativa, mostramos por padrão as CEOs que precisam de atenção
+  // (danificadas ou em manutenção) em vez da lista inteira.
+  const visibleCeos = useMemo(() => {
+    if (!isDefaultView) return ceos;
+    return ceos.filter((item) => ATTENTION_STATUSES.includes(String(item.status || '').toUpperCase()));
+  }, [ceos, isDefaultView]);
 
   function search() {
     load();
@@ -73,19 +85,37 @@ export default function CeoListScreen({ navigation }) {
             <Text style={styles.searchButtonText}>Buscar</Text>
           </Pressable>
         </View>
+
+        <Button
+          label="Adicionar nova CEO"
+          onPress={() => navigation.navigate('CeoCreate')}
+          style={styles.addButton}
+        />
       </HeroHeader>
 
       {loading ? (
         <LoadingView label="Carregando CEOs..." />
       ) : (
         <FlatList
-          data={ceos}
+          data={visibleCeos}
           keyExtractor={(item, index) => String(item.id ?? item.boxNumber ?? index)}
           renderItem={renderCeo}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => load(true)} colors={[colors.primary]} tintColor={colors.primary} />}
-          contentContainerStyle={ceos.length > 0 ? styles.list : styles.emptyList}
-          ListHeaderComponent={error ? <ErrorBanner message={error} style={styles.errorBanner} /> : null}
-          ListEmptyComponent={<EmptyState title="Nenhuma CEO encontrada" message="Tente outro ID ou boxNumber." />}
+          contentContainerStyle={visibleCeos.length > 0 ? styles.list : styles.emptyList}
+          ListHeaderComponent={
+            <>
+              {error ? <ErrorBanner message={error} style={styles.errorBanner} /> : null}
+              {isDefaultView && visibleCeos.length > 0 ? (
+                <Text style={styles.sectionLabel}>CEOs que precisam de atenção</Text>
+              ) : null}
+            </>
+          }
+          ListEmptyComponent={
+            <EmptyState
+              title={isDefaultView ? 'Nenhuma CEO precisa de atenção' : 'Nenhuma CEO encontrada'}
+              message={isDefaultView ? 'Todas as CEOs estão padronizadas no momento.' : 'Tente outro ID ou boxNumber.'}
+            />
+          }
         />
       )}
     </Screen>
@@ -112,8 +142,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   searchButtonText: { color: colors.white, fontWeight: fontWeight.extrabold },
+  addButton: { marginTop: spacing.sm + 2 },
   list: { padding: spacing.lg },
   emptyList: { flexGrow: 1, padding: spacing.lg },
+  sectionLabel: {
+    color: colors.textMuted,
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.extrabold,
+    textTransform: 'uppercase',
+    marginBottom: spacing.sm,
+  },
   card: { marginBottom: spacing.md },
   cardRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   cardTitle: { flex: 1, fontSize: fontSize.xl, fontWeight: fontWeight.extrabold, color: colors.textTitle, marginRight: spacing.sm },

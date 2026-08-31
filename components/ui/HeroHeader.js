@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, fontSize, fontWeight, letterSpacing, spacing } from '../../theme';
 import HomeButton from './HomeButton';
+import HamburgerMenu from './HamburgerMenu';
 
 // Bloco navy usado no topo das telas principais (Boas-vindas, Ordens,
 // Detalhe da OS, Atendimento, CEOs). A cor pinta até atrás da status bar
@@ -14,13 +15,15 @@ export default function HeroHeader({ eyebrow, title, subtitle, onBack, right, ch
   return (
     <View style={[styles.root, { paddingTop: insets.top + spacing.lg }, style]}>
       <View style={styles.topRow}>
-        {onBack ? (
-          <Pressable onPress={onBack} hitSlop={8}>
-            <Text style={styles.back}>‹ Voltar</Text>
-          </Pressable>
-        ) : (
-          <View />
-        )}
+        <View style={styles.topRowLeft}>
+          <HamburgerMenu />
+          {onBack ? (
+            <Pressable onPress={onBack} hitSlop={8}>
+              <Text style={styles.back}>‹ Voltar</Text>
+            </Pressable>
+          ) : null}
+        </View>
+
         <View style={styles.topRowRight}>
           {right}
           <HomeButton />
@@ -46,6 +49,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     minHeight: 20,
+  },
+  topRowLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
   },
   topRowRight: {
     flexDirection: 'row',

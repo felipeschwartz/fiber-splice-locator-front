@@ -4,11 +4,12 @@ import { useAuth } from '../contexts/AuthContext';
 import { getApiErrorMessage } from '../services/api';
 import { getServiceOrder } from '../services/serviceOrderService';
 import { listServiceOrderPhotos } from '../services/serviceOrderPhotoService';
-import { displayValue, firstValue, formatAddress, formatGeolocation } from '../utils/format';
+import { listServiceOrderStatusDescriptions } from '../services/serviceOrderStatusDescriptionService';
+import { displayValue, firstValue, formatAddress, formatDateTime, resolveGeolocation } from '../utils/format';
 import { NEXT_STATUS_BY_CURRENT } from '../utils/serviceOrder';
 import StatusBadge from '../components/StatusBadge';
 import CameraCapture from '../components/CameraCapture';
-import { Button, ErrorBanner, HeroHeader, InfoRow, LoadingView, Screen, SectionCard } from '../components/ui';
+import { Button, ErrorBanner, GeoRow, HeroHeader, InfoRow, LoadingView, Screen, SectionCard } from '../components/ui';
 import { colors, fontSize, fontWeight, radius, spacing } from '../theme';
 
 const TERMINAL_STATUSES = ['COMPLETED', 'CANCELLED'];
@@ -24,6 +25,7 @@ export default function ServiceOrderDetailScreen({ route, navigation }) {
 
   const [order, setOrder] = useState(initialOrder || null);
   const [photos, setPhotos] = useState([]);
+  const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -38,9 +40,14 @@ export default function ServiceOrderDetailScreen({ route, navigation }) {
     setLoading(true);
 
     try {
-      const [orderData, photoData] = await Promise.all([getServiceOrder(id), listServiceOrderPhotos(id)]);
+      const [orderData, photoData, historyData] = await Promise.all([
+        getServiceOrder(id),
+        listServiceOrderPhotos(id),
+        listServiceOrderStatusDescriptions(id),
+      ]);
       setOrder(orderData);
       setPhotos(photoData);
+      setHistory(historyData);
     } catch (err) {
       if (err.response?.status === 401) await logout();
       else setError(getApiErrorMessage(err, 'Não foi possível carregar os dados da ordem.'));
@@ -120,8 +127,22 @@ export default function ServiceOrderDetailScreen({ route, navigation }) {
           <InfoRow label="BoxNumber" value={ceo.boxNumber} />
           <InfoRow label="Descrição" value={ceo.notes} />
           <InfoRow label="Address" value={formatAddress(address)} />
+          <InfoRow label="Usuário responsável" value={order?.user?.name} />
           <InfoRow label="Status" value={status} />
-          <InfoRow label="Geolocation" value={formatGeolocation(geoSources)} bordered={false} />
+          <GeoRow label="Geolocation" coordinates={resolveGeolocation(geoSources)} bordered={false} />
+        </SectionCard>
+
+        <SectionCard title="Histórico de atendimentos">
+          {history.length ? (
+            history.map((entry, index) => (
+              <View key={entry.id ?? index} style={[styles.historyItem, index === history.length - 1 && styles.historyItemLast]}>
+                <Text style={styles.historyDate}>{formatDateTime(entry.createdAt)}</Text>
+                <Text style={styles.historyText}>{entry.statusDescription}</Text>
+              </View>
+            ))
+          ) : (
+            <Text style={styles.muted}>Nenhum registro de atendimento ainda.</Text>
+          )}
         </SectionCard>
 
         <SectionCard title="Fotos anexadas" right={<Text style={styles.count}>{displayedPhotos.length}</Text>}>
@@ -144,6 +165,19 @@ const styles = StyleSheet.create({
   errorSpacing: { marginBottom: spacing.md },
   actionSpacing: { marginBottom: spacing.sm + 2 },
   count: { color: colors.primary, fontWeight: fontWeight.extrabold },
+  historyItem: {
+    borderBottomWidth: 1,
+    borderBottomColor: colors.borderSoft,
+    paddingVertical: spacing.sm + 2,
+  },
+  historyItemLast: { borderBottomWidth: 0, paddingBottom: 0 },
+  historyDate: {
+    color: colors.textMuted,
+    fontSize: fontSize.xs,
+    fontWeight: fontWeight.extrabold,
+    textTransform: 'uppercase',
+  },
+  historyText: { color: colors.textBody, fontSize: fontSize.md, marginTop: spacing.xs },
   gallery: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, marginTop: spacing.md + 2 },
   photo: { width: 96, height: 96, borderRadius: radius.md, backgroundColor: colors.borderSoft },
   muted: { color: colors.textMuted, marginTop: spacing.sm },
