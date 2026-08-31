@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "Fiber Splice Locator",
+    "slug": "fiber-splice-locator-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#0F172A"
+    },
+    "android": {
+      "package": "com.fibersplicelocator.mobile",
+      "permissions": [
+        "CAMERA",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ]
+    },
+    "ios": {
+      "bundleIdentifier": "com.fibersplicelocator.mobile",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Permita o acesso à câmera para anexar fotos à ordem de serviço.",
+        "NSLocationWhenInUseUsageDescription": "Permita o acesso à localização para preencher o endereço do CEO automaticamente."
+      }
+    },
+    "plugins": [
+      "expo-secure-store",
+      "expo-camera",
+      "expo-location"
+    ]
+  }
+}
