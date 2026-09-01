@@ -11,7 +11,7 @@ const CEO_STATUS_OPTIONS = CEO_STATUSES.map((status) => ({ value: status, label:
 
 const ADDRESS_FIELDS = [
   ['addressType', 'Tipo de endereço'],
-  ['street', 'Rua'],
+  ['street', 'Rua / Avenida'],
   ['streetNumber', 'Número'],
   ['neighborhood', 'Bairro'],
   ['city', 'Cidade'],
