@@ -67,7 +67,7 @@ export default function LoginScreen() {
 
           <ErrorBanner message={error} style={styles.error} />
 
-          <Button label="Entrar" onPress={handleSubmit} loading={submitting} />
+          <Button label="Entrar" onPress={handleSubmit} loading={submitting} style={styles.submit} />
         </Card>
       </View>
     </Screen>
@@ -97,4 +97,5 @@ const styles = StyleSheet.create({
   },
   form: { padding: spacing.xl },
   error: { marginBottom: spacing.md },
+  submit: { marginTop: spacing.sm },
 });
