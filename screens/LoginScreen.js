@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
 import { getApiErrorMessage } from '../services/api';
 import { Button, Card, ErrorBanner, Screen, TextField } from '../components/ui';
 import { colors, fontSize, fontWeight, radius, spacing } from '../theme';
 
-export default function LoginScreen() {
+export default function LoginScreen({ navigation }) {
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -68,6 +68,10 @@ export default function LoginScreen() {
           <ErrorBanner message={error} style={styles.error} />
 
           <Button label="Entrar" onPress={handleSubmit} loading={submitting} style={styles.submit} />
+
+          <Pressable onPress={() => navigation.navigate('ForgotPassword')} hitSlop={8} style={styles.forgotLink}>
+            <Text style={styles.forgotLinkText}>Esqueci minha senha</Text>
+          </Pressable>
         </Card>
       </View>
     </Screen>
@@ -98,4 +102,6 @@ const styles = StyleSheet.create({
   form: { padding: spacing.xl },
   error: { marginBottom: spacing.md },
   submit: { marginTop: spacing.sm },
+  forgotLink: { marginTop: spacing.lg, alignItems: 'center' },
+  forgotLinkText: { color: colors.primary, fontWeight: fontWeight.bold },
 });

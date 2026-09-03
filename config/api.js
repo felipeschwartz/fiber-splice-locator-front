@@ -8,6 +8,8 @@ export const API_BASE_URL = 'http://10.0.2.2:8080';
 
 export const API_PATHS = {
   login: '/api/auth/v1/login',
+  forgotPassword: '/api/auth/v1/forgot-password',
+  resetPassword: '/api/auth/v1/reset-password',
 
   ceos: '/api/ceo/v1',
   ceoById: (id) => `/api/ceo/v1/id/${encodeURIComponent(id)}`,
