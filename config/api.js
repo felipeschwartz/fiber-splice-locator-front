@@ -26,4 +26,5 @@ export const API_PATHS = {
 
   users: '/api/user/v1',
   userSearch: (query) => `/api/user/v1/search?q=${encodeURIComponent(query)}`,
+  changeOwnPassword: '/api/user/v1/me/password',
 };

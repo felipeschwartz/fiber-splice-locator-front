@@ -17,6 +17,7 @@ import CeoCreateScreen from './screens/CeoCreateScreen';
 import CeoFormScreen from './screens/CeoFormScreen';
 import UsersScreen from './screens/UsersScreen';
 import UserFormScreen from './screens/UserFormScreen';
+import ChangePasswordScreen from './screens/ChangePasswordScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -39,6 +40,7 @@ function AuthenticatedNavigator() {
       <Stack.Screen name="CeoForm" component={CeoFormScreen} />
       <Stack.Screen name="Users" component={UsersScreen} />
       <Stack.Screen name="UserForm" component={UserFormScreen} />
+      <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
     </Stack.Navigator>
   );
 }

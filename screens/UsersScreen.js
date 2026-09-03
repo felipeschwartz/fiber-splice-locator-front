@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../contexts/AuthContext';
 import { getApiErrorMessage } from '../services/api';
 import { searchUsers } from '../services/userService';
-import { Card, ErrorBanner, HeroHeader, InfoRow, LoadingView, Screen, SectionCard } from '../components/ui';
+import { Button, Card, ErrorBanner, HeroHeader, InfoRow, LoadingView, Screen, SectionCard } from '../components/ui';
 import { colors, fontSize, fontWeight, radius, spacing } from '../theme';
 
 const ADMIN_ROLES = ['ADMIN', 'GOD_ADMIN'];
@@ -56,6 +56,12 @@ export default function UsersScreen({ navigation }) {
           <InfoRow label="Nome" value={user?.name} />
           <InfoRow label="E-mail" value={user?.email} />
           <InfoRow label="Perfil" value={user?.roles?.join(', ')} bordered={false} />
+          <Button
+            label="Alterar senha"
+            variant="outlinePrimary"
+            onPress={() => navigation.navigate('ChangePassword')}
+            style={styles.changePasswordButton}
+          />
         </SectionCard>
 
         <SectionCard title="Buscar usuário">
@@ -98,6 +104,7 @@ export default function UsersScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   content: { padding: spacing.lg, paddingBottom: spacing.xxl },
+  changePasswordButton: { marginTop: spacing.md },
   search: { flexDirection: 'row', alignItems: 'center' },
   searchInput: {
     flex: 1,
