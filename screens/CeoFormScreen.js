@@ -3,13 +3,19 @@ import { Alert, Linking, Pressable, StyleSheet, Text } from 'react-native';
 import { getCurrentGeoLocation } from '../services/locationService';
 import { getApiErrorMessage } from '../services/api';
 import { updateCeo } from '../services/ceoService';
-import { Button, PageHeader, Screen, TextField } from '../components/ui';
+import { CEO_STATUSES, labelCeoStatus } from '../utils/serviceOrder';
+import { Button, PageHeader, Screen, SelectField, TextField } from '../components/ui';
 import { colors, fontSize, fontWeight, radius, spacing } from '../theme';
 
+const CEO_STATUS_OPTIONS = CEO_STATUSES.map((status) => ({ value: status, label: labelCeoStatus(status) }));
+
 const ADDRESS_FIELDS = [
-  ['street', 'Rua'],
+  ['addressType', 'Tipo de endereço'],
+  ['street', 'Rua / Avenida'],
   ['streetNumber', 'Número'],
+  ['neighborhood', 'Bairro'],
   ['city', 'Cidade'],
+  ['referencePoint', 'Ponto de referência'],
 ];
 
 export default function CeoFormScreen({ route, navigation }) {
@@ -19,6 +25,7 @@ export default function CeoFormScreen({ route, navigation }) {
   const [form, setForm] = useState({
     boxNumber: String(existing.boxNumber ?? ''),
     notes: existing.notes || '',
+    status: existing.status || 'STANDARDIZED',
     address: {
       ...existingAddress,
       geoLocation: existingAddress.geoLocation || existingAddress.geolocation || '',
@@ -74,7 +81,7 @@ export default function CeoFormScreen({ route, navigation }) {
 
   return (
     <Screen scroll padded>
-      <PageHeader title="Editar CEO" onBack={() => navigation.goBack()} />
+      <PageHeader eyebrow="EDITAR CEO" title={form.boxNumber || existing.boxNumber || ''} onBack={() => navigation.goBack()} />
 
       <TextField
         label="BoxNumber"
@@ -88,6 +95,13 @@ export default function CeoFormScreen({ route, navigation }) {
         value={form.notes}
         onChangeText={(value) => setForm((current) => ({ ...current, notes: value }))}
         multiline
+      />
+
+      <SelectField
+        label="Status"
+        value={form.status}
+        options={CEO_STATUS_OPTIONS}
+        onChange={(value) => setForm((current) => ({ ...current, status: value }))}
       />
 
       <Text style={styles.section}>Endereço</Text>

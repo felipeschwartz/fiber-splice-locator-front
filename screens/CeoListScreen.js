@@ -56,7 +56,7 @@ export default function CeoListScreen({ navigation }) {
       <Pressable onPress={() => navigation.navigate('CeoDetails', { ceo: item })}>
         <Card style={styles.card}>
           <View style={styles.cardRow}>
-            <Text style={styles.cardTitle}>CEO {item.boxNumber ?? '—'}</Text>
+            <Text style={styles.cardTitle}>{item.boxNumber ?? '—'}</Text>
             <Text style={styles.cardAction}>Ver detalhes</Text>
           </View>
           <Text style={styles.cardMeta}>ID: {item.id ?? '—'}</Text>

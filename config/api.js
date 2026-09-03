@@ -1,3 +1,9 @@
+// Emulador Android: 'http://10.0.2.2:8080' (alias especial que só existe
+// dentro do emulador, aponta pro localhost da própria máquina — não
+// depende de firewall/rede, por isso é o padrão do projeto).
+// Dispositivo físico na mesma rede: IP local da máquina que roda o
+// backend (ex.: 'http://192.168.3.14:8080' — veja com `ipconfig`), e
+// exige liberar a porta 8080 no firewall e a rede como "Privada".
 export const API_BASE_URL = 'http://10.0.2.2:8080';
 
 export const API_PATHS = {

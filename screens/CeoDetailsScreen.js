@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { getApiErrorMessage } from '../services/api';
 import { getCeo } from '../services/ceoService';
 import { displayValue, firstValue } from '../utils/format';
@@ -30,9 +31,13 @@ export default function CeoDetailsScreen({ route, navigation }) {
     }
   }, [id]);
 
-  useEffect(() => {
-    load();
-  }, [load]);
+  // Recarrega ao voltar da tela de edição, garantindo que os dados
+  // exibidos reflitam a última alteração salva.
+  useFocusEffect(
+    useCallback(() => {
+      load();
+    }, [load])
+  );
 
   const address = ceo?.address || {};
   const coordinates = geoOf(address) || geoOf(ceo);
@@ -60,9 +65,14 @@ export default function CeoDetailsScreen({ route, navigation }) {
     <Screen scroll padded>
       <PageHeader
         eyebrow="CAIXA DE EMENDAS ÓPTICAS"
-        title={`CEO ${displayValue(ceo?.boxNumber)}`}
+        title={displayValue(ceo?.boxNumber)}
         onBack={() => navigation.goBack()}
-        right={<Button label="Abrir OS" variant="outlinePrimary" onPress={() => navigation.navigate('ServiceOrderCreate', { ceo })} />}
+        right={
+          <View style={styles.headerActions}>
+            <Button label="Editar" variant="outlinePrimary" onPress={() => navigation.navigate('CeoForm', { ceo })} style={styles.headerButton} />
+            <Button label="Abrir OS" onPress={() => navigation.navigate('ServiceOrderCreate', { ceo })} />
+          </View>
+        }
       />
 
       <SectionCard title="Informações da CEO">
@@ -88,6 +98,8 @@ export default function CeoDetailsScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
+  headerActions: { alignItems: 'stretch' },
+  headerButton: { marginBottom: spacing.sm },
   centerState: { flex: 1, justifyContent: 'center', padding: spacing.xxl },
   centerError: { textAlign: 'center' },
   retryButton: { marginTop: spacing.md },
