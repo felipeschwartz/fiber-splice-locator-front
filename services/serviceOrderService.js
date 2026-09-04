@@ -9,6 +9,12 @@ export async function listServiceOrders() {
   return data?.content || data?.items || data?.serviceOrders || data?.orders || [];
 }
 
+export async function listServiceOrdersByCeo(ceoId) {
+  const { data } = await api.get(API_PATHS.serviceOrdersByCeo(ceoId));
+  if (Array.isArray(data)) return data;
+  return data?.content || data?.items || data?.serviceOrders || data?.orders || [];
+}
+
 export async function getServiceOrder(serviceOrderId) {
   const { data } = await api.get(API_PATHS.serviceOrderById(serviceOrderId));
   return unwrap(data);

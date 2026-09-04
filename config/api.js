@@ -17,6 +17,7 @@ export const API_PATHS = {
   ceoSearch: (query) => `/api/ceo/v1/search?q=${encodeURIComponent(query)}`,
 
   serviceOrders: '/api/service_orders/v1',
+  serviceOrdersByCeo: (ceoId) => `/api/service_orders/v1/ceo/${encodeURIComponent(ceoId)}`,
   openServiceOrder: '/api/service_orders/v1/open',
   serviceOrderById: (id) => `/api/service_orders/v1/id/${encodeURIComponent(id)}`,
   updateServiceOrder: (id) => `/api/service_orders/v1/${encodeURIComponent(id)}`,
