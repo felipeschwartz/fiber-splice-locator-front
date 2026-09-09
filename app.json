@@ -11,22 +11,32 @@
     "android": {
       "package": "com.fibersplicelocator.mobile",
       "permissions": [
-        "CAMERA",
-        "ACCESS_COARSE_LOCATION",
-        "ACCESS_FINE_LOCATION"
+        "android.permission.CAMERA",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.RECORD_AUDIO"
       ]
     },
     "ios": {
       "bundleIdentifier": "com.fibersplicelocator.mobile",
       "infoPlist": {
         "NSCameraUsageDescription": "Permita o acesso à câmera para anexar fotos à ordem de serviço.",
+        "NSPhotoLibraryUsageDescription": "Permita o acesso à galeria para anexar fotos já existentes à ordem de serviço.",
         "NSLocationWhenInUseUsageDescription": "Permita o acesso à localização para preencher o endereço do CEO automaticamente."
       }
     },
     "plugins": [
       "expo-secure-store",
       "expo-camera",
-      "expo-location"
-    ]
+      "expo-image-picker",
+      "expo-location",
+      "expo-notifications"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "a7d351de-3037-4e9d-bf05-041569f3b51c"
+      }
+    },
+    "owner": "felipeschwartz.br"
   }
 }

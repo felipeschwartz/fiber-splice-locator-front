@@ -1,17 +1,30 @@
 import React, { useRef, useState } from 'react';
 import { Alert, Image, Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
+import * as ImagePicker from 'expo-image-picker';
 import { colors, fontSize, fontWeight, radius, spacing } from '../theme';
 import { getApiErrorMessage } from '../services/api';
 import { uploadServiceOrderPhoto } from '../services/serviceOrderPhotoService';
 import { Button } from './ui';
 
-// Modos: idle -> camera -> preview -> sending (ou "denied" se a
-// permissão da câmera for negada).
+const DENIED_TEXT = {
+  camera: {
+    title: 'Acesso à câmera bloqueado',
+    text: 'A câmera é necessária para anexar fotos à ordem. Permita o acesso nas configurações do sistema.',
+  },
+  gallery: {
+    title: 'Acesso à galeria bloqueado',
+    text: 'A galeria é necessária para selecionar fotos já existentes. Permita o acesso nas configurações do sistema.',
+  },
+};
+
+// Modos: idle -> camera | preview -> sending (ou "denied" se a permissão
+// da câmera/galeria for negada, com `deniedFor` indicando qual das duas).
 export default function CameraCapture({ serviceOrderId, onUploaded, deferUpload = false, onPhotoSelected }) {
   const cameraRef = useRef(null);
   const [permission, requestPermission] = useCameraPermissions();
   const [mode, setMode] = useState('idle');
+  const [deniedFor, setDeniedFor] = useState('camera');
   const [preview, setPreview] = useState(null);
   const [error, setError] = useState('');
 
@@ -22,6 +35,7 @@ export default function CameraCapture({ serviceOrderId, onUploaded, deferUpload 
     if (!permission.granted) {
       const result = await requestPermission();
       if (!result.granted) {
+        setDeniedFor('camera');
         setMode('denied');
         return;
       }
@@ -43,6 +57,37 @@ export default function CameraCapture({ serviceOrderId, onUploaded, deferUpload 
     } catch (err) {
       setError(err.message || 'Não foi possível capturar a foto.');
     }
+  }
+
+  async function pickFromGallery() {
+    setError('');
+
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permissionResult.granted) {
+      setDeniedFor('gallery');
+      setMode('denied');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      quality: 0.8,
+    });
+
+    if (result.canceled) return;
+
+    const asset = result.assets?.[0];
+    if (!asset?.uri) {
+      setError('Não foi possível selecionar a imagem.');
+      return;
+    }
+
+    setPreview({
+      uri: asset.uri,
+      mimeType: asset.mimeType || 'image/jpeg',
+      fileName: asset.fileName || `os-${serviceOrderId}-${Date.now()}.jpg`,
+    });
+    setMode('preview');
   }
 
   async function sendPhoto() {
@@ -71,14 +116,13 @@ export default function CameraCapture({ serviceOrderId, onUploaded, deferUpload 
   }
 
   if (mode === 'denied') {
+    const denied = DENIED_TEXT[deniedFor];
     return (
       <View style={styles.box}>
-        <Text style={styles.title}>Acesso à câmera bloqueado</Text>
-        <Text style={styles.text}>
-          A câmera é necessária para anexar fotos à ordem. Permita o acesso nas configurações do sistema.
-        </Text>
+        <Text style={styles.title}>{denied.title}</Text>
+        <Text style={styles.text}>{denied.text}</Text>
         <Button label="Abrir configurações" onPress={() => Linking.openSettings()} style={styles.spacedTop} />
-        <Pressable onPress={openCamera}>
+        <Pressable onPress={() => setMode('idle')}>
           <Text style={styles.link}>Tentar novamente</Text>
         </Pressable>
       </View>
@@ -109,9 +153,12 @@ export default function CameraCapture({ serviceOrderId, onUploaded, deferUpload 
         <View style={styles.actions}>
           <Button
             variant="outline"
-            label="Refazer"
+            label="Descartar"
             disabled={mode === 'sending'}
-            onPress={() => setMode('camera')}
+            onPress={() => {
+              setPreview(null);
+              setMode('idle');
+            }}
             style={styles.actionButton}
           />
           <Button
@@ -128,7 +175,10 @@ export default function CameraCapture({ serviceOrderId, onUploaded, deferUpload 
   return (
     <View style={styles.box}>
       {error ? <Text style={styles.error}>{error}</Text> : null}
-      <Button label="Adicionar foto" onPress={openCamera} />
+      <View style={styles.actions}>
+        <Button label="Tirar foto" onPress={openCamera} style={styles.actionButton} />
+        <Button label="Escolher da galeria" variant="outline" onPress={pickFromGallery} style={styles.actionButton} />
+      </View>
     </View>
   );
 }

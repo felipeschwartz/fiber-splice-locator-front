@@ -1,6 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { login as loginRequest } from '../services/authService';
 import { tokenStorage, userStorage } from '../services/storage';
+import { registerForPushNotificationsAsync } from '../services/pushNotificationService';
 
 const AuthContext = createContext(null);
 
@@ -24,6 +25,7 @@ export function AuthProvider({ children }) {
 
     await tokenStorage.set(data.token);
     setToken(data.token);
+    registerForPushNotificationsAsync();
 
     if (data.user) {
       await userStorage.set(data.user);
