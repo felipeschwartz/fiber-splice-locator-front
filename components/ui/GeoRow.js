@@ -10,7 +10,15 @@ export default function GeoRow({ label = 'Geolocalização', coordinates, border
   async function openMap() {
     if (!coordinates) return;
     const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(coordinates)}`;
-    if (await Linking.canOpenURL(url)) await Linking.openURL(url);
+    // Não usar Linking.canOpenURL aqui: no Android 11+, as restrições de
+    // "package visibility" fazem esse check retornar false pra https mesmo
+    // quando existe navegador/Maps instalado, sem um <queries> no manifest.
+    // Abrir direto funciona normalmente.
+    try {
+      await Linking.openURL(url);
+    } catch (error) {
+      console.log('Failed to open map URL:', error.message);
+    }
   }
 
   return (
