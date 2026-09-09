@@ -1,10 +1,11 @@
-// Emulador Android: 'http://10.0.2.2:8080' (alias especial que só existe
-// dentro do emulador, aponta pro localhost da própria máquina — não
-// depende de firewall/rede, por isso é o padrão do projeto).
-// Dispositivo físico na mesma rede: IP local da máquina que roda o
-// backend (ex.: 'http://192.168.3.14:8080' — veja com `ipconfig`), e
-// exige liberar a porta 8080 no firewall e a rede como "Privada".
-export const API_BASE_URL = 'http://10.0.2.2:8080';
+// Em dev, sem EXPO_PUBLIC_API_BASE_URL definida, cai no alias do emulador
+// Android ('10.0.2.2' aponta pro localhost da própria máquina). Pra rodar
+// num dispositivo físico na mesma rede, defina EXPO_PUBLIC_API_BASE_URL
+// com o IP local da máquina que roda o backend (ex.: 'http://192.168.3.14:8080',
+// veja com `ipconfig`) e libere a porta 8080 no firewall / rede "Privada".
+// No build de produção (EAS Build), o valor vem de eas.json — é embutido
+// no app na hora do build, então precisa apontar pra URL pública do backend.
+export const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'http://10.0.2.2:8080';
 
 export const API_PATHS = {
   login: '/api/auth/v1/login',
