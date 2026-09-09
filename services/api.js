@@ -5,7 +5,9 @@ import { tokenStorage } from './storage';
 export const api = axios.create({
   baseURL: API_BASE_URL,
   headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-  timeout: 15000,
+  // 45s pra tolerar o cold start do backend no plano free do Render
+  // (a primeira requisição depois de ~15min sem tráfego pode levar 30-60s).
+  timeout: 45000,
 });
 
 api.interceptors.request.use(async (config) => {
