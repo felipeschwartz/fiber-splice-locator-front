@@ -37,7 +37,7 @@ export default function LoginScreen({ navigation }) {
     <Screen keyboardAvoiding background={colors.backgroundSoft}>
       <View style={styles.container}>
         <View style={styles.logo}>
-          <Text style={styles.logoText}>FS</Text>
+          <Text style={styles.logoText}>FSL</Text>
         </View>
 
         <Text style={styles.title}>Fiber Splice Locator</Text>
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: spacing.xl,
   },
-  logoText: { color: colors.white, fontSize: fontSize.xxl + 6, fontWeight: fontWeight.extrabold },
+  logoText: { color: colors.white, fontSize: fontSize.xxl, fontWeight: fontWeight.extrabold },
   title: { textAlign: 'center', color: colors.textTitle, fontSize: fontSize.title, fontWeight: fontWeight.extrabold },
   subtitle: {
     textAlign: 'center',
