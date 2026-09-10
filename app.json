@@ -11,6 +11,7 @@
     },
     "android": {
       "package": "com.fibersplicelocator.mobile",
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#1E695D"

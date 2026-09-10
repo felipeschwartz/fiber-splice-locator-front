@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "624683109537",
+    "project_id": "fiber-splice-locator",
+    "storage_bucket": "fiber-splice-locator.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:624683109537:android:920aafd87cc0cd5362f4e0",
+        "android_client_info": {
+          "package_name": "com.fibersplicelocator.mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHlxbtyQA4JdzuOLwksdhM_m1HuHhKhiM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
