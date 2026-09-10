@@ -8,9 +8,7 @@ import { colors, fontSize, fontWeight, letterSpacing, spacing } from '../theme';
 
 const COLLABORATORS = [
   'Eduardo Ribeiro Silveira',
-  'Vorni Valpir Fagundes da Cunha Junior',
   'Diego Ribeiro Torres',
-  'Lucas Candido Vargas',
 ];
 
 export default function WelcomeScreen({ navigation }) {
@@ -78,8 +76,14 @@ export default function WelcomeScreen({ navigation }) {
         <Text style={styles.aboutSection}>Repositórios</Text>
         <Text style={styles.aboutText}>
           Mobile:{' '}
-          <LinkText url="https://github.com/felipeschwartz/fiber-splice-locator-front">
-            fiber-splice-locator-front
+          <LinkText url="https://github.com/felipeschwartz/fiber-splice-locator-front-app">
+            fiber-splice-locator-front-app
+          </LinkText>
+        </Text>
+        <Text style={styles.aboutText}>
+          Web:{' '}
+          <LinkText url="https://github.com/felipeschwartz/fiber-splice-locator-front-web">
+            fiber-splice-locator-front-web
           </LinkText>
         </Text>
         <Text style={styles.aboutText}>
