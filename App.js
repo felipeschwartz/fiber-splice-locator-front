@@ -2,8 +2,21 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import * as Notifications from 'expo-notifications';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { LoadingView } from './components/ui';
+
+// Sem isso, o SO engole a notificação silenciosamente quando o app está
+// aberto em primeiro plano (nenhum banner, nenhum som) — só entrega
+// visivelmente com o app em segundo plano ou fechado.
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowBanner: true,
+    shouldShowList: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 
 import LoginScreen from './screens/LoginScreen';
 import UnlockScreen from './screens/UnlockScreen';
