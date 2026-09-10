@@ -8,8 +8,7 @@ import { listServiceOrderPhotos } from '../services/serviceOrderPhotoService';
 import { listServiceOrderStatusDescriptions } from '../services/serviceOrderStatusDescriptionService';
 import { displayValue, firstValue, formatAddress, formatDateTime, resolveGeolocation } from '../utils/format';
 import { NEXT_STATUS_BY_CURRENT } from '../utils/serviceOrder';
-import StatusBadge from '../components/StatusBadge';
-import CameraCapture from '../components/CameraCapture';
+import StatusBadge, { SERVICE_ORDER_STATUS_META } from '../components/StatusBadge';
 import { Button, ErrorBanner, GeoRow, HeroHeader, InfoRow, LoadingView, Screen, SectionCard } from '../components/ui';
 import { colors, fontSize, fontWeight, radius, spacing } from '../theme';
 
@@ -137,7 +136,7 @@ export default function ServiceOrderDetailScreen({ route, navigation }) {
           <InfoRow label="Descrição" value={ceo.notes} />
           <InfoRow label="Address" value={formatAddress(address)} />
           <InfoRow label="Usuário responsável" value={order?.user?.name} />
-          <InfoRow label="Status" value={status} />
+          <InfoRow label="Status" value={SERVICE_ORDER_STATUS_META[normalizedStatus]?.label || status} />
           <GeoRow label="Geolocation" coordinates={resolveGeolocation(geoSources)} bordered={false} />
         </SectionCard>
 
@@ -155,8 +154,6 @@ export default function ServiceOrderDetailScreen({ route, navigation }) {
         </SectionCard>
 
         <SectionCard title="Fotos anexadas" right={<Text style={styles.count}>{galleryPhotos.length}</Text>}>
-          <CameraCapture serviceOrderId={id} onUploaded={load} />
-
           <View style={styles.gallery}>
             {galleryPhotos.map((item, index) => (
               <Pressable key={`${item.uri}-${index}`} onPress={() => setViewerIndex(index)}>

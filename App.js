@@ -6,6 +6,7 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { LoadingView } from './components/ui';
 
 import LoginScreen from './screens/LoginScreen';
+import UnlockScreen from './screens/UnlockScreen';
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 import ResetPasswordScreen from './screens/ResetPasswordScreen';
 import WelcomeScreen from './screens/WelcomeScreen';
@@ -58,13 +59,13 @@ function GuestNavigator() {
 }
 
 function Navigation() {
-  const { loading, isAuthenticated } = useAuth();
+  const { loading, isAuthenticated, locked } = useAuth();
 
   if (loading) return <LoadingView />;
 
   return (
     <NavigationContainer>
-      {isAuthenticated ? <AuthenticatedNavigator /> : <GuestNavigator />}
+      {isAuthenticated ? (locked ? <UnlockScreen /> : <AuthenticatedNavigator />) : <GuestNavigator />}
     </NavigationContainer>
   );
 }

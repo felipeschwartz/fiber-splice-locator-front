@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
 import { getApiErrorMessage } from '../services/api';
+import { lastEmailStorage } from '../services/storage';
 import { Button, Card, ErrorBanner, Screen, TextField } from '../components/ui';
 import { colors, fontSize, fontWeight, radius, spacing } from '../theme';
 
@@ -11,6 +12,12 @@ export default function LoginScreen({ navigation }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    lastEmailStorage.get().then((savedEmail) => {
+      if (savedEmail) setEmail(savedEmail);
+    });
+  }, []);
 
   async function handleSubmit() {
     if (!email.trim() || !password) {

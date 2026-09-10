@@ -5,11 +5,12 @@ import { getApiErrorMessage } from '../services/api';
 import { listServiceOrders } from '../services/serviceOrderService';
 import { getServiceOrderId } from '../utils/serviceOrder';
 import ServiceOrderCard from '../components/ServiceOrderCard';
+import { SERVICE_ORDER_STATUS_META } from '../components/StatusBadge';
 import { Chip, EmptyState, ErrorBanner, HeroHeader, LoadingView, Screen } from '../components/ui';
 import { colors, fontSize, fontWeight, spacing } from '../theme';
 
 const STATUS_FILTERS = ['ALL', 'OPEN', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'];
-const filterLabel = (status) => (status === 'ALL' ? 'Todas' : status);
+const filterLabel = (status) => (status === 'ALL' ? 'Todas' : SERVICE_ORDER_STATUS_META[status]?.label || status);
 
 function sortOrders(orders, ascending) {
   const valueOf = (order) => String(order.updatedAt || order.createdAt || getServiceOrderId(order) || '');

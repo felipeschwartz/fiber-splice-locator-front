@@ -28,7 +28,8 @@
       "infoPlist": {
         "NSCameraUsageDescription": "Permita o acesso à câmera para anexar fotos à ordem de serviço.",
         "NSPhotoLibraryUsageDescription": "Permita o acesso à galeria para anexar fotos já existentes à ordem de serviço.",
-        "NSLocationWhenInUseUsageDescription": "Permita o acesso à localização para preencher o endereço do CEO automaticamente."
+        "NSLocationWhenInUseUsageDescription": "Permita o acesso à localização para preencher o endereço do CEO automaticamente.",
+        "NSFaceIDUsageDescription": "Use o Face ID para desbloquear o aplicativo rapidamente."
       }
     },
     "plugins": [

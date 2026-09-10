@@ -1,7 +1,9 @@
 import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const TOKEN_KEY = 'fiber_splice_locator_jwt';
 const USER_KEY = 'fiber_splice_locator_user';
+const LAST_EMAIL_KEY = 'fiber_splice_locator_last_email';
 
 export const tokenStorage = {
   async get() {
@@ -33,5 +35,16 @@ export const userStorage = {
   },
   async clear() {
     return SecureStore.deleteItemAsync(USER_KEY);
+  },
+};
+
+// E-mail não é segredo, então usa AsyncStorage (mais simples) em vez do
+// SecureStore — só pra pré-preencher o campo de login da próxima vez.
+export const lastEmailStorage = {
+  async get() {
+    return AsyncStorage.getItem(LAST_EMAIL_KEY);
+  },
+  async set(email) {
+    return AsyncStorage.setItem(LAST_EMAIL_KEY, email);
   },
 };

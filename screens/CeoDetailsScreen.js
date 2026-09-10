@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import { useAuth } from '../contexts/AuthContext';
 import { getApiErrorMessage } from '../services/api';
 import { getCeo } from '../services/ceoService';
 import { listServiceOrdersByCeo } from '../services/serviceOrderService';
@@ -15,6 +16,8 @@ const geoOf = (source) => firstValue(source, 'geoLocation', 'geolocation', 'coor
 export default function CeoDetailsScreen({ route, navigation }) {
   const { ceo: initialCeo, ceoId } = route?.params || {};
   const id = ceoId ?? initialCeo?.id;
+  const { user } = useAuth();
+  const canOpenServiceOrder = (user?.roles || []).some((role) => role === 'GOD_ADMIN' || role === 'ADMIN');
 
   const [ceo, setCeo] = useState(initialCeo || null);
   const [loading, setLoading] = useState(!initialCeo);
@@ -100,7 +103,9 @@ export default function CeoDetailsScreen({ route, navigation }) {
         right={
           <View style={styles.headerActions}>
             <Button label="Editar" variant="outlinePrimary" onPress={() => navigation.navigate('CeoForm', { ceo })} style={styles.headerButton} />
-            <Button label="Abrir OS" onPress={() => navigation.navigate('ServiceOrderCreate', { ceo })} />
+            {canOpenServiceOrder ? (
+              <Button label="Abrir OS" onPress={() => navigation.navigate('ServiceOrderCreate', { ceo })} />
+            ) : null}
           </View>
         }
       />

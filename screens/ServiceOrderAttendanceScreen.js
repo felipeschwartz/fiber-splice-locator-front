@@ -6,6 +6,7 @@ import { completeServiceOrderAttendance } from '../services/serviceOrderService'
 import { uploadServiceOrderPhoto } from '../services/serviceOrderPhotoService';
 import { getCurrentGeoLocation } from '../services/locationService';
 import { SERVICE_ORDER_STATUSES } from '../utils/serviceOrder';
+import { SERVICE_ORDER_STATUS_META } from '../components/StatusBadge';
 import CameraCapture from '../components/CameraCapture';
 import { Button, Chip, ErrorBanner, HeroHeader, Screen, SectionCard, TextField } from '../components/ui';
 import { colors, fontSize, spacing } from '../theme';
@@ -125,7 +126,12 @@ export default function ServiceOrderAttendanceScreen({ route, navigation }) {
         <SectionCard title="Novo status da OS">
           <View style={styles.statusGrid}>
             {SERVICE_ORDER_STATUSES.map((option) => (
-              <Chip key={option} label={option} active={status === option} onPress={() => setStatus(option)} />
+              <Chip
+                key={option}
+                label={SERVICE_ORDER_STATUS_META[option]?.label || option}
+                active={status === option}
+                onPress={() => setStatus(option)}
+              />
             ))}
           </View>
         </SectionCard>
