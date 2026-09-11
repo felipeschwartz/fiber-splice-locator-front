@@ -71,13 +71,25 @@ function GuestNavigator() {
   );
 }
 
+// Link do e-mail de "nova OS atribuída" (fibersplicelocator://service-orders/12)
+// abre direto na tela de detalhe, se o app estiver instalado e logado — sem
+// sessão salva, cai na tela de login normal (o link não redireciona depois).
+const linking = {
+  prefixes: ['fibersplicelocator://'],
+  config: {
+    screens: {
+      ServiceOrderDetail: 'service-orders/:serviceOrderId',
+    },
+  },
+};
+
 function Navigation() {
   const { loading, isAuthenticated, locked } = useAuth();
 
   if (loading) return <LoadingView />;
 
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       {isAuthenticated ? (locked ? <UnlockScreen /> : <AuthenticatedNavigator />) : <GuestNavigator />}
     </NavigationContainer>
   );

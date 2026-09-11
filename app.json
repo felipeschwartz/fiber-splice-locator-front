@@ -2,6 +2,7 @@
   "expo": {
     "name": "Fiber Splice Locator",
     "slug": "fiber-splice-locator-mobile",
+    "scheme": "fibersplicelocator",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
